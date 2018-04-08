@@ -8,7 +8,7 @@ setup.classList.remove('hidden');
 /**
   * Массивы с набором имен, фамилий, цвета плаща и цвета глаза для персонажа.
   */
-var firstNames = [
+var FIRST_NAMES = [
   'Иван',
   'Хуан Себастьян',
   'Мария',
@@ -18,7 +18,7 @@ var firstNames = [
   'Люпита',
   'Вашингтон'
 ];
-var lastNames = [
+var LAST_NAMES = [
   'да Марья',
   'Верон',
   'Мирабелла',
@@ -28,7 +28,7 @@ var lastNames = [
   'Нионго',
   'Ирвинг'
 ];
-var coatColors = [
+var COAT_COLORS = [
   'rgb(101, 137, 164)',
   'rgb(241, 43, 107)',
   'rgb(146, 100, 161)',
@@ -36,7 +36,7 @@ var coatColors = [
   'rgb(215, 210, 55)',
   'rgb(0, 0, 0)'
 ];
-var eyesColors = [
+var EYES_COLORS = [
   'black',
   'red',
   'blue',
@@ -46,14 +46,14 @@ var eyesColors = [
 
 /**
  * Функция нахождения рандомного элемента в массиве.
- * @param {Object} arr
+ * @param {Array} arr
  * @return {number}
  */
-var getRandom = function (arr) {
-  return Math.floor(Math.random() * arr.length);
+var getRandomElementArray = function (arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 };
 
-var characters = []; // Массив объектов со свойствами персонажей.
+var wizards = []; // Массив объектов со свойствами персонажей.
 var COUNT_CHARACTERS = 4; // Количество похожих персонажей.
 
 /**
@@ -61,37 +61,42 @@ var COUNT_CHARACTERS = 4; // Количество похожих персона�
  * Присвоение свойствам объектов случайных значений.
  */
 for (var i = 0; i < COUNT_CHARACTERS; i++) {
-  characters[i] = [
-    {
-      name: firstNames[getRandom(firstNames)] + ' ' + lastNames[getRandom(lastNames)],
-      coatColor: coatColors[getRandom(coatColors)],
-      eyesColor: eyesColors[getRandom(eyesColors)]
-    }
-  ];
-} // ТУТ Я НЕ УВЕРЕН в ПРАВИЛЬНОСТИ НАПИСАНИЯ ЦИКЛА, МОЖЕТ СТОИЛО ОБА ЦИКЛА ОБЪЕДИНИТЬ В ОДИН?
-// ТОГДА ВООБЩЕ НЕ ПРИШЛОСЬ БЫ СОЗДАВАТЬ МАССИВ, А БЫЛ БЫ ПРОСТОЙ ОБЪЕКТ, У КОТОРОГО С КАЖДОЙ ИТЕРАЦИЕЙ МЕНЯЛИСЬ БЫ ЗНАЧЕНИЯ СВОЙСТВ.
+  wizards[i] = {
+    name: getRandomElementArray(FIRST_NAMES) + ' ' + getRandomElementArray(LAST_NAMES),
+    coatColor: getRandomElementArray(COAT_COLORS),
+    eyesColor: getRandomElementArray(EYES_COLORS)
+  };
+}
 
 var setupList = document.querySelector('.setup-similar-list'); // Блок, внутрь которого будем добавлять шаблон.
 var template = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item'); // Шаблон блока похожего персонажа.
 
 /**
- * Этот цикл добавляет блок похожего персонажа в DOM.
- * Для соответствующих элементов добавляет значения свойств из массива объектов для персонажа.
+ * Функция генерирования похожего персонажа
+ * @param {Array} characters
+ * @return {string}
  */
-for (i = 0; i < COUNT_CHARACTERS; i++) {
+var renderWizard = function (characters) {
   var wizard = template.cloneNode(true);
-  setupList.appendChild(wizard);
 
-  var wizardCoat = document.querySelector('.setup-similar-item:nth-child(' + (i + 1) + ') .wizard-coat');
-  var wizardEyes = document.querySelector('.setup-similar-item:nth-child(' + (i + 1) + ') .wizard-eyes');
-  var wizardName = document.querySelector('.setup-similar-item:nth-child(' + (i + 1) + ') .setup-similar-label');
+  var wizardCoat = wizard.querySelector('.wizard-coat');
+  var wizardEyes = wizard.querySelector('.wizard-eyes');
+  var wizardName = wizard.querySelector('.setup-similar-label');
 
-  wizardCoat.setAttribute('fill', characters[i][0].coatColor);
-  wizardEyes.setAttribute('fill', characters[i][0].eyesColor);
-  wizardName.textContent = characters[i][0].name;
-  // 0 ЗДЕСЬ ПОЯВЛЯЕТСЯ, ПОТОМУ ЧТО У МЕНЯ В ПЕРВОМ ЦИКЛЕ ПОЛУЧАЕТСЯ ДВУМЕРНЫЙ МАССИВ.
-  // Я НЕ ПРИДУМАЛ, КАК СДЕЛАТЬ ПО ДРУГОМУ, КРОМЕ ВАРИАНТА ВЫШЕ.
+  wizardCoat.setAttribute('fill', characters.coatColor);
+  wizardEyes.setAttribute('fill', characters.eyesColor);
+  wizardName.textContent = characters.name;
+
+  return wizard;
+};
+
+var fragment = document.createDocumentFragment();
+
+for (i = 0; i < COUNT_CHARACTERS; i++) {
+  fragment.appendChild(renderWizard(wizards[i]));
 }
+
+setupList.appendChild(fragment);
 
 /**
  * Убираем скрытие блока с похожими персонажами
