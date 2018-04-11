@@ -156,3 +156,11 @@ setupButton.addEventListener('click', setupButtonClickHandler);
 setupButton.addEventListener('keydown', onSetupButtonEnterPress);
 setupClose.addEventListener('click', setupCloseClickHandler);
 setupClose.addEventListener('keydown', onSetupCloseEnterPress);
+
+
+/**
+ * Валидация ввода имени персонажа
+ */
+var setupUserName = document.querySelector('.setup-user-name');
+
+setupUserName.setAttribute('minlength', 2);
