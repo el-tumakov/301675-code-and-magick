@@ -1,11 +1,6 @@
 'use strict';
 
 /**
-  * Убираем скрытие блока с настрйоками персонажа.
-  */
-var setup = document.querySelector('.setup');
-setup.classList.remove('hidden');
-/**
   * Массивы с набором имен, фамилий, цвета плаща и цвета глаза для персонажа.
   */
 var FIRST_NAMES = [
@@ -43,6 +38,9 @@ var EYES_COLORS = [
   'yellow',
   'green'
 ];
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 
 /**
  * Функция нахождения рандомного элемента в массиве.
@@ -103,3 +101,58 @@ setupList.appendChild(fragment);
  */
 var setupSimilar = document.querySelector('.setup-similar');
 setupSimilar.classList.remove('hidden');
+
+
+/**
+  * Скрытие и закрытие блока с настрйоками персонажа.
+  */
+var setup = document.querySelector('.setup');
+var setupButton = document.querySelector('.setup-open');
+var setupClose = document.querySelector('.setup-close');
+
+/**
+ * Закрытие окна с настройками персонажа при нажатии на ESC.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
+ */
+var onSetupEscPress = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    setupCloseClickHandler();
+  }
+};
+/**
+ * Открытие окна с настройками персонажа при нажатии ENTER на кнопку setup-open.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
+ */
+var onSetupButtonEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    setupButtonClickHandler();
+  }
+};
+/**
+ * Закрытие окна с настройками персонажа при нажатии ENTER на кнопку setup-close.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
+ */
+var onSetupCloseEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    setupCloseClickHandler();
+  }
+};
+/**
+ * Показ окна с настройками персонажа.
+ */
+var setupButtonClickHandler = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', onSetupEscPress);
+};
+/**
+ * Скрытие окна с настройками персонажа.
+ */
+var setupCloseClickHandler = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', onSetupEscPress);
+};
+
+setupButton.addEventListener('click', setupButtonClickHandler);
+setupButton.addEventListener('keydown', onSetupButtonEnterPress);
+setupClose.addEventListener('click', setupCloseClickHandler);
+setupClose.addEventListener('keydown', onSetupCloseEnterPress);
