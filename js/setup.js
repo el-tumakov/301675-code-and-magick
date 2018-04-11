@@ -38,6 +38,13 @@ var EYES_COLORS = [
   'yellow',
   'green'
 ];
+var FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
 
@@ -109,13 +116,15 @@ setupSimilar.classList.remove('hidden');
 var setup = document.querySelector('.setup');
 var setupButton = document.querySelector('.setup-open');
 var setupClose = document.querySelector('.setup-close');
+var setupUserName = document.querySelector('.setup-user-name');
+
 
 /**
  * Закрытие окна с настройками персонажа при нажатии на ESC.
  * @param {Object} evt - вызываем свойство keyCode объекта event.
  */
 var onSetupEscPress = function (evt) {
-  if (evt.keyCode === ESC_KEYCODE) {
+  if (evt.keyCode === ESC_KEYCODE && !(setupUserName === document.activeElement)) {
     setupCloseClickHandler();
   }
 };
@@ -159,18 +168,16 @@ setupClose.addEventListener('keydown', onSetupCloseEnterPress);
 
 
 /**
- * Валидация ввода имени персонажа
+ * Валидация ввода имени персонажа.
  */
-var setupUserName = document.querySelector('.setup-user-name');
-
 setupUserName.setAttribute('minlength', 2);
 
 
 /**
- * Изменение цвета глаз волшебника
+ * Изменение цвета глаз волшебника.
  */
 var setupWizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
-
+var inputWizardEyes = document.querySelector('input[name="eyes-color"]');
 /**
  * Изменение цвета глаз персонажа при нажатии на ENTER.
  * @param {Object} evt - вызываем свойство keyCode объекта event.
@@ -181,13 +188,45 @@ var onSetupWizardEyesEnterPress = function (evt) {
   }
 };
 
-i = 1;
+var indexWizardEyesColor = 1;
 var setupWizardEyesClickHandler = function () {
-  setupWizardEyes.setAttribute('fill', EYES_COLORS[i]);
+  setupWizardEyes.setAttribute('fill', EYES_COLORS[indexWizardEyesColor]);
+  inputWizardEyes.value = EYES_COLORS[indexWizardEyesColor];
 
-  (i === (EYES_COLORS.length - 1)) ? (i = 0) : i++;
+  if (indexWizardEyesColor === EYES_COLORS.length - 1) {
+    indexWizardEyesColor = 0;
+  } else {
+    indexWizardEyesColor++;
+  }
 };
 
 setupWizardEyes.addEventListener('click', setupWizardEyesClickHandler);
 setupWizardEyes.addEventListener('keydown', onSetupWizardEyesEnterPress);
 
+
+/**
+ * Изменение цвета фаербола у волшебника.
+ */
+var setupFireball = document.querySelector('.setup-fireball-wrap');
+var inputFireball = document.querySelector('input[name="fireball-color"]');
+
+var onSetupFireballEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    setupFireballClickHandler();
+  }
+};
+
+var indexFireballColor = 1;
+var setupFireballClickHandler = function () {
+  setupFireball.setAttribute('style', 'background-color: ' + FIREBALL_COLORS[indexFireballColor]);
+  inputFireball.value = FIREBALL_COLORS[indexFireballColor];
+
+  if (indexFireballColor === FIREBALL_COLORS.length - 1) {
+    indexFireballColor = 0;
+  } else {
+    indexFireballColor++;
+  }
+};
+
+setupFireball.addEventListener('click', setupFireballClickHandler);
+setupFireball.addEventListener('keydown', onSetupFireballEnterPress);
