@@ -164,3 +164,30 @@ setupClose.addEventListener('keydown', onSetupCloseEnterPress);
 var setupUserName = document.querySelector('.setup-user-name');
 
 setupUserName.setAttribute('minlength', 2);
+
+
+/**
+ * Изменение цвета глаз волшебника
+ */
+var setupWizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
+
+/**
+ * Изменение цвета глаз персонажа при нажатии на ENTER.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
+ */
+var onSetupWizardEyesEnterPress = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    setupWizardEyesClickHandler();
+  }
+};
+
+i = 1;
+var setupWizardEyesClickHandler = function () {
+  setupWizardEyes.setAttribute('fill', EYES_COLORS[i]);
+
+  (i === (EYES_COLORS.length - 1)) ? (i = 0) : i++;
+};
+
+setupWizardEyes.addEventListener('click', setupWizardEyesClickHandler);
+setupWizardEyes.addEventListener('keydown', onSetupWizardEyesEnterPress);
+
