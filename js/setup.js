@@ -118,53 +118,69 @@ var setupButton = document.querySelector('.setup-open');
 var setupClose = document.querySelector('.setup-close');
 var setupUserName = document.querySelector('.setup-user-name');
 
+/**
+ * Показ окна с настройками персонажа.
+ */
+var openSetup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', setupKeydownHandler);
+};
+
+/**
+ * Скрытие окна с настройками персонажа.
+ */
+var closeSetup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', setupKeydownHandler);
+};
 
 /**
  * Закрытие окна с настройками персонажа при нажатии на ESC.
  * @param {Object} evt - вызываем свойство keyCode объекта event.
  */
-var onSetupEscPress = function (evt) {
+var setupKeydownHandler = function (evt) {
   if (evt.keyCode === ESC_KEYCODE && !(setupUserName === document.activeElement)) {
-    setupCloseClickHandler();
+    closeSetup();
   }
 };
 /**
  * Открытие окна с настройками персонажа при нажатии ENTER на кнопку setup-open.
  * @param {Object} evt - вызываем свойство keyCode объекта event.
  */
-var onSetupButtonEnterPress = function (evt) {
+var setupButtonKeydownHandler = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    setupButtonClickHandler();
+    openSetup();
   }
 };
 /**
  * Закрытие окна с настройками персонажа при нажатии ENTER на кнопку setup-close.
  * @param {Object} evt - вызываем свойство keyCode объекта event.
  */
-var onSetupCloseEnterPress = function (evt) {
+var setupCloseKeydownHandler = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    setupCloseClickHandler();
+    closeSetup();
   }
 };
 /**
- * Показ окна с настройками персонажа.
+ * Обработчик клика на кнопку с настройками.
+ * Открывает окно настроек.
  */
 var setupButtonClickHandler = function () {
-  setup.classList.remove('hidden');
-  document.addEventListener('keydown', onSetupEscPress);
+  openSetup();
 };
+
 /**
- * Скрытие окна с настройками персонажа.
+ * Обработчик клика на кнопку закрытия настроек.
+ * Закрывает окно настроек.
  */
 var setupCloseClickHandler = function () {
-  setup.classList.add('hidden');
-  document.removeEventListener('keydown', onSetupEscPress);
+  closeSetup();
 };
 
 setupButton.addEventListener('click', setupButtonClickHandler);
-setupButton.addEventListener('keydown', onSetupButtonEnterPress);
+setupButton.addEventListener('keydown', setupButtonKeydownHandler);
 setupClose.addEventListener('click', setupCloseClickHandler);
-setupClose.addEventListener('keydown', onSetupCloseEnterPress);
+setupClose.addEventListener('keydown', setupCloseKeydownHandler);
 
 
 /**
@@ -178,18 +194,12 @@ setupUserName.setAttribute('minlength', 2);
  */
 var setupWizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
 var inputWizardEyes = document.querySelector('input[name="eyes-color"]');
-/**
- * Изменение цвета глаз персонажа при нажатии на ENTER.
- * @param {Object} evt - вызываем свойство keyCode объекта event.
- */
-var onSetupWizardEyesEnterPress = function (evt) {
-  if (evt.keyCode === ENTER_KEYCODE) {
-    setupWizardEyesClickHandler();
-  }
-};
-
 var indexWizardEyesColor = 1;
-var setupWizardEyesClickHandler = function () {
+
+/**
+ * Смена цвета глаза у персонажа.
+ */
+var changeWizardEyes = function () {
   setupWizardEyes.setAttribute('fill', EYES_COLORS[indexWizardEyesColor]);
   inputWizardEyes.value = EYES_COLORS[indexWizardEyesColor];
 
@@ -200,24 +210,35 @@ var setupWizardEyesClickHandler = function () {
   }
 };
 
-setupWizardEyes.addEventListener('click', setupWizardEyesClickHandler);
-setupWizardEyes.addEventListener('keydown', onSetupWizardEyesEnterPress);
-
-
 /**
- * Изменение цвета фаербола у волшебника.
+ * Изменение цвета глаз персонажа при нажатии на ENTER.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
  */
-var setupFireball = document.querySelector('.setup-fireball-wrap');
-var inputFireball = document.querySelector('input[name="fireball-color"]');
-
-var onSetupFireballEnterPress = function (evt) {
+var setupWizardEyesKeydownHandler = function (evt) {
   if (evt.keyCode === ENTER_KEYCODE) {
-    setupFireballClickHandler();
+    changeWizardEyes();
   }
 };
 
+/**
+ * Обработчик клика на глаза персонажа.
+ * Меняет цвет глаз.
+ */
+var setupWizardEyesClickHandler = function () {
+  changeWizardEyes();
+};
+
+setupWizardEyes.addEventListener('click', setupWizardEyesClickHandler);
+setupWizardEyes.addEventListener('keydown', setupWizardEyesKeydownHandler);
+
+var setupFireball = document.querySelector('.setup-fireball-wrap');
+var inputFireball = document.querySelector('input[name="fireball-color"]');
 var indexFireballColor = 1;
-var setupFireballClickHandler = function () {
+
+/**
+ * Изменение цвета фаерболла у волшебника.
+ */
+var changeFireballColor = function () {
   setupFireball.setAttribute('style', 'background-color: ' + FIREBALL_COLORS[indexFireballColor]);
   inputFireball.value = FIREBALL_COLORS[indexFireballColor];
 
@@ -228,5 +249,24 @@ var setupFireballClickHandler = function () {
   }
 };
 
+/**
+ * Обработчик нажатия клавиши на фаерболл.
+ * При нажатии на ENTER меняет цвет фаерболла.
+ * @param {Object} evt - event.
+ */
+var setupFireballKeydownHandler = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    changeFireballColor();
+  }
+};
+
+/**
+ * Обработчик клика на фаерболл.
+ * Меняет цвет фаерболла.
+ */
+var setupFireballClickHandler = function () {
+  changeFireballColor();
+};
+
 setupFireball.addEventListener('click', setupFireballClickHandler);
-setupFireball.addEventListener('keydown', onSetupFireballEnterPress);
+setupFireball.addEventListener('keydown', setupFireballKeydownHandler);
