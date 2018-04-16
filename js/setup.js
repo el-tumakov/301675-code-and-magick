@@ -47,6 +47,8 @@ var FIREBALL_COLORS = [
 ];
 var ESC_KEYCODE = 27;
 var ENTER_KEYCODE = 13;
+var SETUP_TOP = '80px';
+var SETUP_LEFT = '50%';
 
 
 /**
@@ -132,6 +134,9 @@ var openSetup = function () {
 var closeSetup = function () {
   setup.classList.add('hidden');
   document.removeEventListener('keydown', setupKeydownHandler);
+
+  setup.style.top = SETUP_TOP;
+  setup.style.left = SETUP_LEFT;
 };
 
 /**
@@ -270,3 +275,99 @@ var setupFireballClickHandler = function () {
 
 setupFireball.addEventListener('click', setupFireballClickHandler);
 setupFireball.addEventListener('keydown', setupFireballKeydownHandler);
+
+
+/**
+ * Перетаскиевание окна с настройками.
+ */
+var setupUserPic = document.querySelector('.upload input');
+
+/**
+ * Перетаскивание элемента.
+ * @param {Object} evt - event.
+ * @param {string} elem - элемент, который хотим перетащить.
+ */
+var dragElement = function (evt, elem) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var mousemoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    elem.style.top = (elem.offsetTop - shift.y) + 'px';
+    elem.style.left = (elem.offsetLeft - shift.x) + 'px';
+  };
+
+  var mouseupHandler = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', mousemoveHandler);
+    document.removeEventListener('mouseup', mouseupHandler);
+  };
+
+  document.addEventListener('mousemove', mousemoveHandler);
+  document.addEventListener('mouseup', mouseupHandler);
+};
+
+/**
+ * Обработчик отпускания кливиши мыши на аватаре пользователя.
+ */
+var setupUserPicMousedownHandler = function (evt) {
+  dragElement(evt, setup);
+};
+
+setupUserPic.addEventListener('mousedown', setupUserPicMousedownHandler);
+
+
+/**
+ * Перетаскивание предметов инвентаря.
+ */
+var shopElement = document.querySelector('.setup-artifacts-shop');
+var artifactsElement = document.querySelector('.setup-artifacts');
+var draggedItem = null;
+
+shopElement.addEventListener('dragstart', function (evt) {
+  if (evt.target.tagName.toLowerCase() === 'img') {
+    draggedItem = evt.target;
+    evt.dataTransfer.setData('text/plain', evt.target.alt);
+    artifactsElement.style.outline = '2px dashed red';
+  }
+});
+
+artifactsElement.addEventListener('dragover', function (evt) {
+  evt.preventDefault();
+  return false;
+});
+
+artifactsElement.addEventListener('drop', function (evt) {
+  artifactsElement.style.outline = '';
+
+  evt.target.style.backgroundColor = '';
+  evt.target.appendChild(draggedItem);
+  evt.preventDefault();
+});
+
+
+artifactsElement.addEventListener('dragenter', function (evt) {
+  evt.target.style.backgroundColor = 'yellow';
+  evt.preventDefault();
+});
+
+artifactsElement.addEventListener('dragleave', function (evt) {
+  evt.target.style.backgroundColor = '';
+  evt.preventDefault();
+});
