@@ -1,11 +1,6 @@
 'use strict';
 
 /**
-  * Убираем скрытие блока с настрйоками персонажа.
-  */
-var setup = document.querySelector('.setup');
-setup.classList.remove('hidden');
-/**
   * Массивы с набором имен, фамилий, цвета плаща и цвета глаза для персонажа.
   */
 var FIRST_NAMES = [
@@ -43,6 +38,18 @@ var EYES_COLORS = [
   'yellow',
   'green'
 ];
+var FIREBALL_COLORS = [
+  '#ee4830',
+  '#30a8ee',
+  '#5ce6c0',
+  '#e848d5',
+  '#e6e848'
+];
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+var SETUP_TOP = '80px';
+var SETUP_LEFT = '50%';
+
 
 /**
  * Функция нахождения рандомного элемента в массиве.
@@ -103,3 +110,264 @@ setupList.appendChild(fragment);
  */
 var setupSimilar = document.querySelector('.setup-similar');
 setupSimilar.classList.remove('hidden');
+
+
+/**
+  * Скрытие и закрытие блока с настрйоками персонажа.
+  */
+var setup = document.querySelector('.setup');
+var setupButton = document.querySelector('.setup-open');
+var setupClose = document.querySelector('.setup-close');
+var setupUserName = document.querySelector('.setup-user-name');
+
+/**
+ * Показ окна с настройками персонажа.
+ */
+var openSetup = function () {
+  setup.classList.remove('hidden');
+  document.addEventListener('keydown', setupKeydownHandler);
+};
+
+/**
+ * Скрытие окна с настройками персонажа.
+ */
+var closeSetup = function () {
+  setup.classList.add('hidden');
+  document.removeEventListener('keydown', setupKeydownHandler);
+
+  setup.style.top = SETUP_TOP;
+  setup.style.left = SETUP_LEFT;
+};
+
+/**
+ * Закрытие окна с настройками персонажа при нажатии на ESC.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
+ */
+var setupKeydownHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE && !(setupUserName === document.activeElement)) {
+    closeSetup();
+  }
+};
+/**
+ * Открытие окна с настройками персонажа при нажатии ENTER на кнопку setup-open.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
+ */
+var setupButtonKeydownHandler = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    openSetup();
+  }
+};
+/**
+ * Закрытие окна с настройками персонажа при нажатии ENTER на кнопку setup-close.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
+ */
+var setupCloseKeydownHandler = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    closeSetup();
+  }
+};
+/**
+ * Обработчик клика на кнопку с настройками.
+ * Открывает окно настроек.
+ */
+var setupButtonClickHandler = function () {
+  openSetup();
+};
+
+/**
+ * Обработчик клика на кнопку закрытия настроек.
+ * Закрывает окно настроек.
+ */
+var setupCloseClickHandler = function () {
+  closeSetup();
+};
+
+setupButton.addEventListener('click', setupButtonClickHandler);
+setupButton.addEventListener('keydown', setupButtonKeydownHandler);
+setupClose.addEventListener('click', setupCloseClickHandler);
+setupClose.addEventListener('keydown', setupCloseKeydownHandler);
+
+
+/**
+ * Валидация ввода имени персонажа.
+ */
+setupUserName.setAttribute('minlength', 2);
+
+
+/**
+ * Изменение цвета глаз волшебника.
+ */
+var setupWizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
+var inputWizardEyes = document.querySelector('input[name="eyes-color"]');
+var indexWizardEyesColor = 1;
+
+/**
+ * Смена цвета глаза у персонажа.
+ */
+var changeWizardEyes = function () {
+  setupWizardEyes.setAttribute('fill', EYES_COLORS[indexWizardEyesColor]);
+  inputWizardEyes.value = EYES_COLORS[indexWizardEyesColor];
+
+  if (indexWizardEyesColor === EYES_COLORS.length - 1) {
+    indexWizardEyesColor = 0;
+  } else {
+    indexWizardEyesColor++;
+  }
+};
+
+/**
+ * Изменение цвета глаз персонажа при нажатии на ENTER.
+ * @param {Object} evt - вызываем свойство keyCode объекта event.
+ */
+var setupWizardEyesKeydownHandler = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    changeWizardEyes();
+  }
+};
+
+/**
+ * Обработчик клика на глаза персонажа.
+ * Меняет цвет глаз.
+ */
+var setupWizardEyesClickHandler = function () {
+  changeWizardEyes();
+};
+
+setupWizardEyes.addEventListener('click', setupWizardEyesClickHandler);
+setupWizardEyes.addEventListener('keydown', setupWizardEyesKeydownHandler);
+
+var setupFireball = document.querySelector('.setup-fireball-wrap');
+var inputFireball = document.querySelector('input[name="fireball-color"]');
+var indexFireballColor = 1;
+
+/**
+ * Изменение цвета фаерболла у волшебника.
+ */
+var changeFireballColor = function () {
+  setupFireball.setAttribute('style', 'background-color: ' + FIREBALL_COLORS[indexFireballColor]);
+  inputFireball.value = FIREBALL_COLORS[indexFireballColor];
+
+  if (indexFireballColor === FIREBALL_COLORS.length - 1) {
+    indexFireballColor = 0;
+  } else {
+    indexFireballColor++;
+  }
+};
+
+/**
+ * Обработчик нажатия клавиши на фаерболл.
+ * При нажатии на ENTER меняет цвет фаерболла.
+ * @param {Object} evt - event.
+ */
+var setupFireballKeydownHandler = function (evt) {
+  if (evt.keyCode === ENTER_KEYCODE) {
+    changeFireballColor();
+  }
+};
+
+/**
+ * Обработчик клика на фаерболл.
+ * Меняет цвет фаерболла.
+ */
+var setupFireballClickHandler = function () {
+  changeFireballColor();
+};
+
+setupFireball.addEventListener('click', setupFireballClickHandler);
+setupFireball.addEventListener('keydown', setupFireballKeydownHandler);
+
+
+/**
+ * Перетаскиевание окна с настройками.
+ */
+var setupUserPic = document.querySelector('.upload input');
+
+/**
+ * Перетаскивание элемента.
+ * @param {Object} evt - event.
+ * @param {string} elem - элемент, который хотим перетащить.
+ */
+var dragElement = function (evt, elem) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+
+  var mousemoveHandler = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    elem.style.top = (elem.offsetTop - shift.y) + 'px';
+    elem.style.left = (elem.offsetLeft - shift.x) + 'px';
+  };
+
+  var mouseupHandler = function (upEvt) {
+    upEvt.preventDefault();
+
+    document.removeEventListener('mousemove', mousemoveHandler);
+    document.removeEventListener('mouseup', mouseupHandler);
+  };
+
+  document.addEventListener('mousemove', mousemoveHandler);
+  document.addEventListener('mouseup', mouseupHandler);
+};
+
+/**
+ * Обработчик отпускания кливиши мыши на аватаре пользователя.
+ */
+var setupUserPicMousedownHandler = function (evt) {
+  dragElement(evt, setup);
+};
+
+setupUserPic.addEventListener('mousedown', setupUserPicMousedownHandler);
+
+
+/**
+ * Перетаскивание предметов инвентаря.
+ */
+var shopElement = document.querySelector('.setup-artifacts-shop');
+var artifactsElement = document.querySelector('.setup-artifacts');
+var draggedItem = null;
+
+shopElement.addEventListener('dragstart', function (evt) {
+  if (evt.target.tagName.toLowerCase() === 'img') {
+    draggedItem = evt.target;
+    evt.dataTransfer.setData('text/plain', evt.target.alt);
+    artifactsElement.style.outline = '2px dashed red';
+  }
+});
+
+artifactsElement.addEventListener('dragover', function (evt) {
+  evt.preventDefault();
+  return false;
+});
+
+artifactsElement.addEventListener('drop', function (evt) {
+  artifactsElement.style.outline = '';
+
+  evt.target.style.backgroundColor = '';
+  evt.target.appendChild(draggedItem);
+  evt.preventDefault();
+});
+
+
+artifactsElement.addEventListener('dragenter', function (evt) {
+  evt.target.style.backgroundColor = 'yellow';
+  evt.preventDefault();
+});
+
+artifactsElement.addEventListener('dragleave', function (evt) {
+  evt.target.style.backgroundColor = '';
+  evt.preventDefault();
+});
