@@ -1,8 +1,10 @@
+'use strict';
+
 (function () {
   window.backend = function (url, onLoad, onError, method, data) {
     var xhr = new XMLHttpRequest();
 
-    xhrLoadHandler = function () {
+    var xhrLoadHandler = function () {
       if (xhr.status === 200) {
         onLoad(xhr.response);
       } else {
@@ -10,11 +12,11 @@
       }
     };
 
-    xhrErrorHandler = function () {
+    var xhrErrorHandler = function () {
       onError('Произошла ошибка соединения');
     };
 
-    xhrTimeoutHandler = function () {
+    var xhrTimeoutHandler = function () {
       onError('Запрос не успел выполниться за ' + xhr.timeout + 'мс');
     };
 

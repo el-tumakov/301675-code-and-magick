@@ -33,7 +33,7 @@
    * Отрисовка волшебников на странице.
    * @param {Object} data - данные с сервера.
    */
-  var successLoad = function(data) {
+  var successLoad = function (data) {
     var wizards = data;
     var fragment = document.createDocumentFragment();
 

@@ -5,9 +5,8 @@
 
   var setup = document.querySelector('.setup');
   var form = document.querySelector('.setup-wizard-form');
-  var submitButton = document.querySelector('.setup-submit');
 
-  var successUpload = function (response) {
+  var successUpload = function () {
     setup.classList.add('hidden');
   };
 
