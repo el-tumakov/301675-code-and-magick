@@ -77,6 +77,23 @@
 
       document.addEventListener('mousemove', mousemoveHandler);
       document.addEventListener('mouseup', mouseupHandler);
+    },
+
+    /**
+     * Вывод на экран сообщения при ошибке загрузки данных с сервера.
+     * @param {string} errorMassage - текст ошибки.
+     */
+    errorLoad: function (errorMassage) {
+      var node = document.createElement('div');
+
+      node.style = 'z-index: 100; margin: 0 auto; text-align: center; background-color: red;';
+      node.style.position = 'absolute';
+      node.style.left = 0;
+      node.style.right = 0;
+      node.style.fontSize = '30px';
+
+      node.textContent = errorMassage;
+      document.body.insertAdjacentElement('afterbegin', node);
     }
   };
 })();
