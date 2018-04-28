@@ -25,20 +25,25 @@
   ];
   var ENTER_KEYCODE = 13;
 
+  var wizard = {
+    coatChange: function (color) {},
+    eyesChange: function (color) {}
+  };
+
   /**
  * Изменение цвета куртки волшебника.
  */
   var wizardCoat = document.querySelector('.setup-wizard .wizard-coat');
   var inputWizardCoat = document.querySelector('input[name="coat-color"]');
-  var indexCoatColor = 1;
+  var indexCoatColor = 0;
 
   var wizardFireball = document.querySelector('.setup-fireball-wrap');
   var inputWizardFireball = document.querySelector('input[name="fireball-color"]');
-  var indexFireballColor = 1;
+  var indexFireballColor = 0;
 
   var wizardEyes = document.querySelector('.setup-wizard .wizard-eyes');
   var inputWizardEyes = document.querySelector('input[name="eyes-color"]');
-  var indexEyesColor = 1;
+  var indexEyesColor = 0;
 
   /**
    * Функция смены цвета элемента.
@@ -50,14 +55,14 @@
    * @return {number} indexColor - возвращает измененный индекс цвета.
    */
   var changeColor = function (item, inputOfItem, indexColor, colors, style) {
-    item.setAttribute('style', style + colors[indexColor]);
-    inputOfItem.value = colors[indexColor];
-
     if (indexColor === colors.length - 1) {
       indexColor = 0;
     } else {
       indexColor++;
     }
+
+    item.setAttribute('style', style + colors[indexColor]);
+    inputOfItem.value = colors[indexColor];
 
     return indexColor;
   };
@@ -70,6 +75,7 @@
   var wizardCoatKeydownHandler = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       indexCoatColor = changeColor(wizardCoat, inputWizardCoat, indexCoatColor, COAT_COLORS, 'fill: ');
+      wizard.coatChange(COAT_COLORS[indexCoatColor]);
     }
   };
 
@@ -92,6 +98,7 @@
   var wizardEyesKeydownHandler = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       indexEyesColor = changeColor(wizardEyes, inputWizardEyes, indexEyesColor, EYES_COLORS, 'fill: ');
+      wizard.eyesChange(EYES_COLORS[indexEyesColor]);
     }
   };
 
@@ -101,6 +108,7 @@
    */
   var wizardCoatClickHandler = function () {
     indexCoatColor = changeColor(wizardCoat, inputWizardCoat, indexCoatColor, COAT_COLORS, 'fill: ');
+      wizard.coatChange(COAT_COLORS[indexCoatColor]);
   };
 
   /**
@@ -117,6 +125,7 @@
    */
   var wizardEyesClickHandler = function () {
     indexEyesColor = changeColor(wizardEyes, inputWizardEyes, indexEyesColor, EYES_COLORS, 'fill: ');
+      wizard.eyesChange(EYES_COLORS[indexEyesColor]);
   };
 
   wizardCoat.addEventListener('click', wizardCoatClickHandler);
@@ -127,4 +136,6 @@
 
   wizardEyes.addEventListener('click', wizardEyesClickHandler);
   wizardEyes.addEventListener('keydown', wizardEyesKeydownHandler);
+
+  return window.changeColors = wizard;
 })();
