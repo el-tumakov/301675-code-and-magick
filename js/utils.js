@@ -1,6 +1,10 @@
 'use strict';
 
 (function () {
+  var DEBOUNCE_INTERVAL = 500; // ms
+
+  var lastTimeout;
+
   window.utils = {
     /**
      * Функция получения рандомного элемента в заданном диапазоне.
@@ -94,6 +98,17 @@
 
       node.textContent = errorMassage;
       document.body.insertAdjacentElement('afterbegin', node);
+    },
+
+    /**
+     * Функция устранения "дребезга".
+     * @param {callback} fun - функция, которая будет выполняться по истечению таймаута.
+     */
+    debounce: function (fun) {
+      if (lastTimeout) {
+        window.clearTimeout(lastTimeout);
+      }
+      lastTimeout = window.setTimeout(fun, DEBOUNCE_INTERVAL);
     }
   };
 })();

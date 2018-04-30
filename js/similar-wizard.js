@@ -11,6 +11,11 @@
   var setupList = document.querySelector('.setup-similar-list'); // Блок, внутрь которого будем добавлять шаблон.
   var template = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item'); // Шаблон блока похожего персонажа.
 
+  /**
+   * Добавление рейтинга похожести других персонажей.
+   * @param {string} wizard - один волшебник из массива, по которому будет сравнение по нашему волшебнику.
+   * @return {number} rank - рейтинг похожести волшебника.
+   */
   var getRank = function (wizard) {
     var rank = 0;
 
@@ -22,8 +27,17 @@
     }
 
     return rank;
-  }
+  };
 
+  /**
+   * Сортировка по имени волшебника.
+   * @param {string} left - волшебник в массиве слева.
+   * @param {string} right - волшебник в массиве справа.
+   * @return {number}
+   * 1 - поставит левый элемент перед правым.
+   * -1 - поставит правый элемент перед левым.
+   * 0 - элементы равны.
+   */
   var namesComparator = function (left, right) {
     if (left > right) {
       return 1;
@@ -32,44 +46,45 @@
     } else {
       return 0;
     }
-  }
+  };
 
   /**
-   * Функция генерирования похожего персонажа
-   * @param {Array} characters
-   * @return {string}
+   * Функция отрисовки блока с похожими персонажами.
    */
-  var renderWizard = function (characters) {
+  var renderWizard = function () {
     var fragment = document.createDocumentFragment();
 
     for (var i = 0; i < COUNT_CHARACTERS; i++) {
       var wizard = template.cloneNode(true);
-
-      var wizardCoat = wizard.querySelector('.wizard-coat');
-      var wizardEyes = wizard.querySelector('.wizard-eyes');
-      var wizardName = wizard.querySelector('.setup-similar-label');
-
-      wizardCoat.setAttribute('fill', characters[i].colorCoat);
-      wizardEyes.setAttribute('fill', characters[i].colorEyes);
-      wizardName.textContent = characters[i].name;
-
       fragment.appendChild(wizard);
     }
 
     setupList.appendChild(fragment);
   };
 
-  var updateWizards = function () {
-    console.log(
-      wizards.sort(function (left, right) {
-        var rankDiff = getRank(right) - getRank(left);
+  /**
+   * Функция добавления данных о похожих персонажах.
+   * @param {array} characters - массив с данными о волшебниках.
+   */
+  var renderWizardData = function (characters) {
+    var wizardCoat = setupList.querySelectorAll('.wizard-coat');
+    var wizardEyes = setupList.querySelectorAll('.wizard-eyes');
+    var wizardName = setupList.querySelectorAll('.setup-similar-label');
 
-        if (rankDiff === 0) {
-          rankDiff = namesComparator(left.name, right.name);
-        }
-      })
-    );
-    renderWizard(wizards.sort(function (left, right) {
+    for (var i = 0; i < COUNT_CHARACTERS; i++) {
+      wizardCoat[i].setAttribute('fill', characters[i].colorCoat);
+      wizardEyes[i].setAttribute('fill', characters[i].colorEyes);
+      wizardName[i].textContent = characters[i].name;
+    }
+  };
+
+  /**
+   * Функция обновления данных о похожих персонажах.
+   * Сортирует массив с волшебниками.
+   * В начало массива ставит наиболее похожих на нашего персонажей.
+   */
+  var updateWizards = function () {
+    renderWizardData(wizards.sort(function (left, right) {
       var rankDiff = getRank(right) - getRank(left);
 
       if (rankDiff === 0) {
@@ -80,15 +95,24 @@
     }));
   };
 
+  /**
+   * Функция получения текущего цвета куртки у волшебника.
+   * Устанавливает дебаунс обновления блока с похожими персонажеми.
+   * @param {string} color - цвет куртки.
+   */
   window.changeColors.coatChange = function (color) {
     coatColor = color;
-    updateWizards();
-    console.log(coatColor);
+    window.utils.debounce(updateWizards);
   };
 
+  /**
+   * Функция получения текущего цвета глаз у волшебника.
+   * Устанавливает дебаунс обновления блока с похожими персонажами.
+   * @param {string} color - цвет глаз.
+   */
   window.changeColors.eyesChange = function (color) {
     eyesColor = color;
-    updateWizards();
+    window.utils.debounce(updateWizards);
   };
 
   /**
@@ -99,6 +123,7 @@
    */
   var successLoad = function (data) {
     wizards = data;
+    renderWizard();
     updateWizards();
 
     /**

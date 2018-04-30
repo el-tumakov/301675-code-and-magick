@@ -25,11 +25,6 @@
   ];
   var ENTER_KEYCODE = 13;
 
-  var wizard = {
-    coatChange: function (color) {},
-    eyesChange: function (color) {}
-  };
-
   /**
  * Изменение цвета куртки волшебника.
  */
@@ -75,7 +70,7 @@
   var wizardCoatKeydownHandler = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       indexCoatColor = changeColor(wizardCoat, inputWizardCoat, indexCoatColor, COAT_COLORS, 'fill: ');
-      wizard.coatChange(COAT_COLORS[indexCoatColor]);
+      window.changeColors.coatChange(COAT_COLORS[indexCoatColor]);
     }
   };
 
@@ -98,7 +93,7 @@
   var wizardEyesKeydownHandler = function (evt) {
     if (evt.keyCode === ENTER_KEYCODE) {
       indexEyesColor = changeColor(wizardEyes, inputWizardEyes, indexEyesColor, EYES_COLORS, 'fill: ');
-      wizard.eyesChange(EYES_COLORS[indexEyesColor]);
+      window.changeColors.eyesChange(EYES_COLORS[indexEyesColor]);
     }
   };
 
@@ -108,7 +103,7 @@
    */
   var wizardCoatClickHandler = function () {
     indexCoatColor = changeColor(wizardCoat, inputWizardCoat, indexCoatColor, COAT_COLORS, 'fill: ');
-      wizard.coatChange(COAT_COLORS[indexCoatColor]);
+    window.changeColors.coatChange(COAT_COLORS[indexCoatColor]);
   };
 
   /**
@@ -125,7 +120,7 @@
    */
   var wizardEyesClickHandler = function () {
     indexEyesColor = changeColor(wizardEyes, inputWizardEyes, indexEyesColor, EYES_COLORS, 'fill: ');
-      wizard.eyesChange(EYES_COLORS[indexEyesColor]);
+    window.changeColors.eyesChange(EYES_COLORS[indexEyesColor]);
   };
 
   wizardCoat.addEventListener('click', wizardCoatClickHandler);
@@ -137,5 +132,26 @@
   wizardEyes.addEventListener('click', wizardEyesClickHandler);
   wizardEyes.addEventListener('keydown', wizardEyesKeydownHandler);
 
-  return window.changeColors = wizard;
+  /**
+   * Объект для экспорта значений текущего цвета глаз и куртки нашего волшебника.
+   */
+  window.changeColors = {
+    /**
+     * Коллбек передачи значения цвета куртки.
+     * @param {string} color - цвет куртки.
+     * @return {string} color.
+     */
+    coatChange: function (color) {
+      return color;
+    },
+
+    /**
+     * Коллбек передачи значения цвета глаз.
+     * @param {string} color - цвет глаз.
+     * @return {string} color.
+     */
+    eyesChange: function (color) {
+      return color;
+    }
+  };
 })();
